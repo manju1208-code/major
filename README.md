@@ -1,55 +1,74 @@
-# శ్రీ మహాభారతం (Mahabharatam App) — Flutter Mini Project
+# Mahabharatam App — Full Setup Guide (Manjula కి)
 
-A complete, professional-looking Flutter reference app covering the Mahabharatam:
-- All **18 Parvams** with detailed summaries and key events
-- **12 Bhagavad Gita slokas** in Sanskrit, with Telugu and English meanings
-- **14 character profiles** of major heroes and figures
-- Full navigation drawer, home dashboard, and About page
+Ee app లో ready గా unnavi:
+- Login / Signup (Firebase Auth)
+- Home (Characters + Parvas tabs), Search, Dark mode toggle
+- Character/Parva detail screens (English + Telugu)
+- Favorites (heart icon, saves to Firestore)
+- Quiz (score save + Profile lo history)
+- Admin Panel (characters/Parvas/quiz add-edit-delete) — only admin login కి కనిపిస్తుంది
 
-No external API/backend needed — all data lives locally in the app (`lib/data/`), so it runs instantly with zero network or backend setup.
+Nీ pని ippudu: ఈ క్రింది steps follow చేసి, Firebase connect చేసి, run చేయాలి. Motham 15-20 nimishalu padutundi (chala fast, step by step follow cheయు).
 
-## How to run this in VS Code (fastest, error-free way)
+## STEP 1: Firebase Project create cheయడం (5 min)
+1. https://console.firebase.google.com ki వెళ్ళి Google login చేయి
+2. "Add project" → పేరు పెట్టు (e.g. "mahabharatam-app") → Continue → Create project
+3. Project open అయ్యాక, ఎడమవైపు **Build > Authentication** కి వెళ్ళి "Get Started" → **Email/Password** enable చేయి
+4. ఎడమవైపు **Build > Firestore Database** కి వెళ్ళి "Create database" → **Start in test mode** select చేయి (college project కి సరిపోతుంది) → Enable
 
-1. Open a terminal and create a fresh Flutter project:
-   ```
-   flutter create mahabharatam_app
-   cd mahabharatam_app
-   ```
-2. Delete the default `lib` folder that was generated, and copy the entire `lib` folder from this project into it (replace it).
-3. Open the project folder in VS Code:
-   ```
-   code .
-   ```
-4. Get packages:
-   ```
-   flutter pub get
-   ```
-5. Run the app (pick an emulator/device first, or use Chrome):
-   ```
-   flutter run
-   ```
+## STEP 2: Flutter project లో Firebase connect cheయడం (5 min)
+Terminal (VS Code / Android Studio) లో ఈ project folder లోకి వెళ్ళి:
 
-That's it — no backend, no API keys, no extra setup. Everything (Drawer navigation → Home, 18 Parvams, Slokas, Characters, About) is wired and ready.
-
-## Project structure
 ```
-lib/
-  main.dart                     -> App entry point
-  theme/app_theme.dart          -> Colors & app-wide theme
-  models/models.dart            -> Parva, Sloka, CharacterProfile data classes
-  data/parvams_data.dart        -> All 18 Parvams content
-  data/slokas_data.dart         -> Bhagavad Gita slokas content
-  data/characters_data.dart     -> Character profiles content
-  widgets/app_drawer.dart       -> Shared navigation drawer
-  screens/home_screen.dart
-  screens/parvams_screen.dart
-  screens/parva_detail_screen.dart
-  screens/slokas_screen.dart
-  screens/characters_screen.dart
-  screens/character_detail_screen.dart
-  screens/about_screen.dart
+flutter pub get
+dart pub global activate flutterfire_cli
+flutterfire configure
 ```
 
-## Notes
-- Uses only built-in Flutter/Material widgets — no extra packages required beyond the Flutter default `pubspec.yaml`, so `flutter pub get` won't fail from missing packages.
-- You can add more Parvams/Slokas/Characters anytime by adding more entries to the files in `lib/data/`.
+`flutterfire configure` run చేసినప్పుడు:
+- ఇది నీ Firebase account login అడుగుతుంది → అవును చేయి
+- ఇప్పుడు create చేసిన project select చేయి (mahabharatam-app)
+- Platforms: android, ios (లేదా web అవసరమైతే) select చేయి → Enter
+
+ఇది automatic గా `lib/firebase_options.dart` file create చేస్తుంది.
+
+## STEP 3: main.dart లో connect cheయడం
+`lib/main.dart` file open చేసి, ఈ 2 లైన్లు add చేయి:
+
+1. Top లో import add చేయి:
+```dart
+import 'firebase_options.dart';
+```
+
+2. `Firebase.initializeApp()` line ని ఇలా మార్చు:
+```dart
+await Firebase.initializeApp(
+  options: DefaultFirebaseOptions.currentPlatform,
+);
+```
+
+## STEP 4: Run cheయడం
+```
+flutter run
+```
+
+## STEP 5: Admin account create cheయడం
+1. App లో Sign Up చేయి email గా: **admin@mahabharatam.com** (ఏదైనా password)
+2. ఈ email తోనే login అయితే, Admin Panel option కనిపిస్తుంది (top-right menu లో)
+3. Admin Panel లో "cloud upload" icon తో sample Characters/Parvas add చేసుకోవచ్చు, "Load Sample Quiz Questions" button తో quiz కూడా add చేసుకోవచ్చు
+4. ఆ తర్వాత + button తో నీ own 45+ characters, 18 Parvas content add చేసుకోవచ్చు
+
+(Admin email మార్చుకోవాలంటే: `lib/services/auth_service.dart` file లో `isAdmin` line లో email మార్చు)
+
+## Features Checklist
+- [x] Login/Signup — Firebase Auth
+- [x] Frontend — Characters, Parvas, Search, Dark mode
+- [x] Backend — Firestore (characters, parvas, quiz_questions, quiz_results, favorites)
+- [x] Quiz + Score tracking (Profile screen)
+- [x] Favorites
+- [x] Admin Panel (content management)
+
+## Common Errors
+- **"No Firebase App"** error → Step 2/3 సరిగ్గా చేయలేదు, flutterfire configure మళ్ళీ run చేయి
+- **Firestore permission denied** → Firestore test mode లో create చేసావా చూడు (Step 1.4)
+- **Package not found** → `flutter pub get` మళ్ళీ run చేయి

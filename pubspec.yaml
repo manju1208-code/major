@@ -1,5 +1,5 @@
 name: mahabharatam_app
-description: A Telugu-English Mahabharatam reference app with 18 Parvas, Bhagavad Gita slokas, and character profiles.
+description: Mahabharatam Flutter App with Firebase backend
 publish_to: 'none'
 version: 1.0.0+1
 
@@ -9,6 +9,17 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  cupertino_icons: ^1.0.6
+  firebase_core: ^2.27.0
+  firebase_auth: ^4.17.4
+  cloud_firestore: ^4.15.4
+  provider: ^6.1.2
+  shared_preferences: ^2.2.2
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^3.0.0
 
 flutter:
   uses-material-design: true
